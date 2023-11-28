@@ -37,14 +37,20 @@ class Mosque_Prayer_Time_Plugin {
     public function initialize_settings() {
         register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_activated_geo');
         register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_activated_secure_api');
+        register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_mosque_name');
+        register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_mosque_slug');
+
+
+        add_settings_field('mosque_prayer_time_mosque_name', 'Name of the Mosque', array($this, 'text_input_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_mosque_name'));
+        add_settings_field('mosque_prayer_time_mosque_slug', 'Slug of the Mosque', array($this, 'text_input_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_mosque_slug'));
     
         add_settings_section('mosque_prayer_time_section', 'Plugin Settings', array($this, 'section_callback'), 'mosque_prayer_time_settings');
     
         // First settings field for "Activate Footer Widget - GEO Location"
-        add_settings_field('mosque_prayer_time_activated_geo', 'Activate Footer Widget - GEO Location', array($this, 'activated_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_activated_geo'));
+        add_settings_field('mosque_prayer_time_activated_geo', 'Footer Widget - GEO Location', array($this, 'activated_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_activated_geo'));
     
         // Second settings field for "Activate Footer Widget - SECURE API"
-        add_settings_field('mosque_prayer_time_activated_secure_api', 'Activate Footer Widget - SECURE API', array($this, 'activated_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_activated_secure_api'));
+        add_settings_field('mosque_prayer_time_activated_secure_api', 'Footer Widget - SECURE API', array($this, 'activated_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_activated_secure_api'));
     }
 
     public function section_callback() {
@@ -54,7 +60,12 @@ class Mosque_Prayer_Time_Plugin {
     public function activated_callback($args) {
         $field_name = $args['field_name'];
         $activated = get_option($field_name);
-        echo '<label><input type="checkbox" name="' . esc_attr($field_name) . '" value="1" ' . checked(1, $activated, false) . '> Activate</label>';
+        echo '<label><input type="checkbox" name="' . esc_attr($field_name) . '" value="1" ' . checked(1, $activated, false) . '>Activate</label>';
+    }
+    public function text_input_callback($args) {
+        $field_name = $args['field_name'];
+        $field_value = get_option($field_name);
+        echo '<input type="text" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
     }
 
     public function settings_page() {
@@ -72,14 +83,6 @@ class Mosque_Prayer_Time_Plugin {
         <?php
     }
 
-    // public function enqueue_scripts() {
-    //     wp_enqueue_script('mosque-prayer-time-script', plugins_url('js/mosque-prayer-time-script.js', __FILE__), array('jquery'), '1.0', true);
-
-    //     // Pass the necessary data to JavaScript
-    //     wp_localize_script('mosque-prayer-time-script', 'mosque_prayer_time_data', array(
-    //         'ajax_url' => admin_url('admin-ajax.php'),
-    //     ));
-    // }
 
     public function activate_sticky_footer_widget() {
         echo 'Activating sticky footer widget';
