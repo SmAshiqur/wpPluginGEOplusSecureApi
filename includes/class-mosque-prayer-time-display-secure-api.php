@@ -98,9 +98,11 @@ if ($response !== false) {
                                             </tr>
 
                                             <tr class="jummah-row">
-                                                <td class="salat-name" colspan="3" style="">
-                                                    <p style="margin:0; margin-top:-3px; font-weight:600;">Khateeb: &nbsp;<?php echo $jummah_prayer->khateeb ?></p>
-                                                </td>
+                                                <?php if (!empty($jummah_prayer->khateeb)) : ?>
+                                                    <td class="salat-name" colspan="3">
+                                                        <p style="margin:0; margin-top:-3px; font-weight:600;">Khateeb: &nbsp;<?php echo $jummah_prayer->khateeb ?></p>
+                                                    </td>
+                                                <?php endif; ?>
                                             </tr>
                                             <?php
                                             $jummah_name_suffix .= 'I';
