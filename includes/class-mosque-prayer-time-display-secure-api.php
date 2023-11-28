@@ -44,7 +44,7 @@ if ($response !== false) {
                 <div class="prayer-times-floating">
                     <div class="prayer-times-head">
                         <div class="prayer-times-header-text">
-                            Prayer Times of <?php echo esc_html($mosque_name); ?>
+                            Prayer Times  <?php echo esc_html($mosque_name); ?>
                         </div>
                     
                         <div id="prayer-time-toggle-secure-api">&#9650;</div>

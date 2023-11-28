@@ -13,6 +13,7 @@
  * Text Domain: mpt
  * Update URI: #Github-URL
  */
+require_once plugin_dir_path(__FILE__) . 'includes/class-mosque-info-input.php';
 
 class Mosque_Prayer_Time_Plugin {
 
@@ -37,21 +38,24 @@ class Mosque_Prayer_Time_Plugin {
     public function initialize_settings() {
         register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_activated_geo');
         register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_activated_secure_api');
-        register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_mosque_name');
-        register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_mosque_slug');
+        // register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_mosque_name');
+        // register_setting('mosque_prayer_time_settings', 'mosque_prayer_time_mosque_slug');
 
 
-        add_settings_field('mosque_prayer_time_mosque_name', 'Name of the Mosque', array($this, 'text_input_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_mosque_name'));
-        add_settings_field('mosque_prayer_time_mosque_slug', 'Slug of the Mosque', array($this, 'text_input_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_mosque_slug'));
-    
-        add_settings_section('mosque_prayer_time_section', 'Plugin Settings', array($this, 'section_callback'), 'mosque_prayer_time_settings');
-    
-        // First settings field for "Activate Footer Widget - GEO Location"
+        // add_settings_field('mosque_prayer_time_mosque_name', 'Name of the Mosque', array($this, 'text_input_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_mosque_name'));
+        // add_settings_field('mosque_prayer_time_mosque_slug', 'Slug of the Mosque', array($this, 'text_input_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_mosque_slug'));   
         add_settings_field('mosque_prayer_time_activated_geo', 'Footer Widget - GEO Location', array($this, 'activated_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_activated_geo'));
-    
-        // Second settings field for "Activate Footer Widget - SECURE API"
         add_settings_field('mosque_prayer_time_activated_secure_api', 'Footer Widget - SECURE API', array($this, 'activated_callback'), 'mosque_prayer_time_settings', 'mosque_prayer_time_section', array('field_name' => 'mosque_prayer_time_activated_secure_api'));
+        add_settings_section('mosque_prayer_time_section', 'Plugin Settings', array($this, 'section_callback'), 'mosque_prayer_time_settings');    
+
+        if (get_option('mosque_prayer_time_activated_secure_api')) {
+            // Call the Mosque_Info_Input class only if 'mosque_prayer_time_activated_secure_api' is not selected
+            Mosque_Info_Input::initialize_settings();
+            
+        }
     }
+
+    
 
     public function section_callback() {
         echo '<p>Activate or deactivate the plugin.</p>';
@@ -62,11 +66,12 @@ class Mosque_Prayer_Time_Plugin {
         $activated = get_option($field_name);
         echo '<label><input type="checkbox" name="' . esc_attr($field_name) . '" value="1" ' . checked(1, $activated, false) . '>Activate</label>';
     }
-    public function text_input_callback($args) {
-        $field_name = $args['field_name'];
-        $field_value = get_option($field_name);
-        echo '<input type="text" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
-    }
+    
+    // public function text_input_callback($args) {
+    //     $field_name = $args['field_name'];
+    //     $field_value = get_option($field_name);
+    //     echo '<input type="text" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
+    // }
 
     public function settings_page() {
         ?>
